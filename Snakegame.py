@@ -6,8 +6,8 @@ import random
 pygame.init()
 
 # Constants
-SCREEN_WIDTH = 600
-SCREEN_HEIGHT = 400
+SCREEN_WIDTH = 800  # Adjusted screen width
+SCREEN_HEIGHT = 600  # Adjusted screen height
 GRID_SIZE = 20
 GRID_WIDTH = SCREEN_WIDTH // GRID_SIZE
 GRID_HEIGHT = SCREEN_HEIGHT // GRID_SIZE
@@ -18,11 +18,30 @@ BLACK = (0, 0, 0)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 
+# Load background image
+background_image = pygame.image.load("Images/Background.jpg")
+background_image = pygame.transform.scale(background_image, (SCREEN_WIDTH, SCREEN_HEIGHT))
+
 # Directions
 UP = (0, -1)
 DOWN = (0, 1)
 LEFT = (-1, 0)
 RIGHT = (1, 0)
+
+# Particle class for visual effects
+class Particle:
+    def __init__(self, position):
+        self.image = pygame.Surface((2, 2))
+        self.image.fill((255, 255, 255))
+        self.rect = self.image.get_rect(center=position)
+        self.lifetime = 10
+
+    def update(self):
+        self.lifetime -= 1
+        self.rect.move_ip(1, 0)  # Example movement, adjust as needed
+
+    def draw(self, surface):
+        pygame.draw.rect(surface, (255, 255, 255), self.rect)
 
 # Snake class
 class Snake:
@@ -31,6 +50,7 @@ class Snake:
         self.direction = random.choice([UP, DOWN, LEFT, RIGHT])
         self.score = 0
         self.apple_position = self.randomize_apple_position()
+        self.particles = []
 
     def get_head_position(self):
         return self.positions[0]
@@ -56,6 +76,7 @@ class Snake:
             if self.apple_position == self.get_head_position():
                 self.score += 1
                 self.apple_position = self.randomize_apple_position()
+                self.spawn_particles(self.apple_position)
             else:
                 self.positions.pop()
 
@@ -66,7 +87,21 @@ class Snake:
         self.apple_position = self.randomize_apple_position()
 
     def randomize_apple_position(self):
-        return (random.randint(0, GRID_WIDTH - 1) * GRID_SIZE, random.randint(0, GRID_HEIGHT - 1) * GRID_SIZE)
+        while True:
+            position = (random.randint(0, GRID_WIDTH - 1) * GRID_SIZE, random.randint(0, GRID_HEIGHT - 1) * GRID_SIZE)
+            if position not in self.positions:
+                return position
+
+    def spawn_particles(self, position):
+        for _ in range(10):  # Number of particles to create
+            particle = Particle(position)
+            self.particles.append(particle)
+
+    def update_particles(self):
+        for particle in self.particles:
+            particle.update()
+            if particle.lifetime <= 0:
+                self.particles.remove(particle)
 
     def draw(self, surface):
         for p in self.positions:
@@ -74,6 +109,16 @@ class Snake:
             pygame.draw.rect(surface, GREEN, r)
         r = pygame.Rect((self.apple_position[0], self.apple_position[1]), (GRID_SIZE, GRID_SIZE))
         pygame.draw.rect(surface, RED, r)
+        self.draw_particles(surface)
+
+    def draw_particles(self, surface):
+        for particle in self.particles:
+            particle.draw(surface)
+
+    def draw_score(self, surface):
+        font = pygame.font.Font(None, 36)
+        text = font.render(f'Score: {self.score}', True, WHITE)
+        surface.blit(text, (10, 10))
 
 # Main function
 def main():
@@ -101,8 +146,9 @@ def main():
                     snake.turn(RIGHT)
 
         snake.move()
-        surface.fill(BLACK)
+        surface.blit(background_image, (0, 0))
         snake.draw(surface)
+        snake.draw_score(surface)
         screen.blit(surface, (0, 0))
         pygame.display.update()
         pygame.display.flip()
