@@ -73,3 +73,40 @@ class Snake:
             r = pygame.Rect((p[0], p[1]), (GRID_SIZE, GRID_SIZE))
             pygame.draw.rect(surface, GREEN, r)
         r = pygame.Rect((self.apple_position[0], self.apple_position[1]), (GRID_SIZE, GRID_SIZE))
+        pygame.draw.rect(surface, RED, r)
+
+# Main function
+def main():
+    clock = pygame.time.Clock()
+    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
+    pygame.display.set_caption('Snake Game')
+    surface = pygame.Surface(screen.get_size())
+    surface = surface.convert()
+
+    snake = Snake()
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    snake.turn(UP)
+                elif event.key == pygame.K_DOWN:
+                    snake.turn(DOWN)
+                elif event.key == pygame.K_LEFT:
+                    snake.turn(LEFT)
+                elif event.key == pygame.K_RIGHT:
+                    snake.turn(RIGHT)
+
+        snake.move()
+        surface.fill(BLACK)
+        snake.draw(surface)
+        screen.blit(surface, (0, 0))
+        pygame.display.update()
+        pygame.display.flip()
+        clock.tick(10)
+
+if __name__ == "__main__":
+    main()
