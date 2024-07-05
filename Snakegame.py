@@ -27,7 +27,7 @@ RIGHT = (1, 0)
 # Snake class
 class Snake:
     def __init__(self):
-        self.positions = [(GRID_WIDTH // 2, GRID_HEIGHT // 2)]
+        self.positions = [(GRID_WIDTH // 2 * GRID_SIZE, GRID_HEIGHT // 2 * GRID_SIZE)]
         self.direction = random.choice([UP, DOWN, LEFT, RIGHT])
         self.score = 0
         self.apple_position = self.randomize_apple_position()
@@ -48,7 +48,7 @@ class Snake:
     def move(self):
         cur = self.get_head_position()
         x, y = self.direction
-        new = (((cur[0] + (x * GRID_SIZE)) % SCREEN_WIDTH), (cur[1] + (y * GRID_SIZE)) % SCREEN_HEIGHT)
+        new = ((cur[0] + (x * GRID_SIZE)) % SCREEN_WIDTH, (cur[1] + (y * GRID_SIZE)) % SCREEN_HEIGHT)
         if len(self.positions) > 2 and new in self.positions[2:]:
             self.reset()
         else:
@@ -60,7 +60,7 @@ class Snake:
                 self.positions.pop()
 
     def reset(self):
-        self.positions = [(GRID_WIDTH // 2, GRID_HEIGHT // 2)]
+        self.positions = [(GRID_WIDTH // 2 * GRID_SIZE, GRID_HEIGHT // 2 * GRID_SIZE)]
         self.direction = random.choice([UP, DOWN, LEFT, RIGHT])
         self.score = 0
         self.apple_position = self.randomize_apple_position()
