@@ -7,3 +7,8 @@
 [Latest Release](https://github.com/SriRanjani30/Snakegame/releases/latest)
 
 ![Screenshot (3456)](https://github.com/user-attachments/assets/12306b80-c6f1-475d-9f19-cae8efced072)
+
+Requirements:
+1. latest python package
+2. Command prompt
+3. Basic knowledge of handling commands
