@@ -3,3 +3,4 @@
 3. Open command prompt. transfer the control to the folder in which the python file is located.
 4. Now execute the python file.
 5. The game window will pop up and you can play the game.
+![Screenshot (3456)](https://github.com/user-attachments/assets/12306b80-c6f1-475d-9f19-cae8efced072)
